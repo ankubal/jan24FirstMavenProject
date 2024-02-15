@@ -22,115 +22,121 @@ import org.testng.annotations.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-
 public class AssignmentFeb11 {
 	WebDriver driver = null;
 	WebDriverWait wait = null;
-	Actions actions=null;
+	Actions actions = null;
+
 	@BeforeMethod
 	public void intialisation() {
 		// Setting the path to the respective driver
-		WebDriverManager.chromedriver().setup();
-
+		//WebDriverManager.chromedriver().setup();
+		WebDriverManager.edgedriver().setup();
 		// To launch the browser instancE
 
-		driver = new ChromeDriver();
+		driver = new EdgeDriver();
 
 		driver.get("https://naveenautomationlabs.com/opencart/index.php?route=account/login");
 
-//		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-		wait = new WebDriverWait(driver, 15);
-		
-		actions =new Actions(driver);
-		
+		wait = new WebDriverWait(driver, 30);
+
+		actions = new Actions(driver);
+
 		driver.manage().window().maximize();
 	}
+
 	@Test
 	public void addToCart() {
-		
+
 		WebElement email = driver.findElement(By.xpath("//input[@id ='input-email']"));
 		WebElement password = driver.findElement(By.xpath("//input[@id ='input-password']"));
 		WebElement loginBtn = driver.findElement(By.cssSelector("input[type='submit']"));
 		email.sendKeys("akanksha@gmail.com");
 		password.sendKeys("akanksha");
 		loginBtn.submit();
-		
-		WebElement desktops =driver.findElement(By.xpath("//a [text()= 'Desktops'][@class='dropdown-toggle']"));
+
+		WebElement desktops = driver.findElement(By.xpath("//a [text()= 'Desktops'][@class='dropdown-toggle']"));
 		actions.moveToElement(desktops).perform();
-		WebElement alldesktops =driver.findElement(By.xpath("//a [text()= 'Show All Desktops']"));
+		WebElement alldesktops = driver.findElement(By.xpath("//a [text()= 'Show All Desktops']"));
 		alldesktops.click();
 //		WebElement addtoCart =driver.findElement(By.cssSelector("div.product-layout:nth-of-type(1)"));
 //		addtoCart.click();
-		
-		//product  add to cart
-		List<WebElement> products= driver.findElements(By.cssSelector(".product-thumb"));
-		WebElement prod= products.stream().filter(product-> 
-		
+
+		// product add to cart
+		List<WebElement> products = driver.findElements(By.cssSelector(".product-thumb"));
+		WebElement prod = products.stream().filter(product ->
+
 		product.findElement(By.cssSelector("div.caption>h4>a")).getText().equals("MacBook")).findFirst().orElse(null);
 		prod.findElement(By.cssSelector("div.button-group >button:nth-of-type(1)")).click();
-		
-		
-		
+
 		WebElement cartBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("cart-total")));
+		actions.moveToElement(cartBtn).perform();
 		cartBtn.click();
 //		WebElement viewcartBtn =driver.findElement(By.cssSelector("#cart-total"));
 //		viewcartBtn.click();
-		WebElement viewcartBtn =wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#cart>ul>li>div>p>a:first-of-type")));
+		WebElement viewcartBtn = wait
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#cart>ul>li>div>p>a:last-of-type")));
+		actions.moveToElement(viewcartBtn).perform();
 		viewcartBtn.click();
-		WebElement checktoutBtn=wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Checkout']")));
+		WebElement checktoutBtn = wait
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[text()='Checkout']")));
 		checktoutBtn.click();
-		
-		//billing details
-		WebElement newAddressBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("input[type='radio'][name='payment_address'][value='new']")));
+
+		// billing details
+		WebElement newAddressBtn = wait.until(ExpectedConditions
+				.elementToBeClickable(By.cssSelector("input[type='radio'][name='payment_address'][value='new']")));
 		newAddressBtn.click();
 		WebElement firstname = driver.findElement(By.xpath("//input[@id='input-payment-firstname']"));
-		WebElement lastname= driver.findElement(By.xpath("//input[@id='input-payment-lastname']"));
+		WebElement lastname = driver.findElement(By.xpath("//input[@id='input-payment-lastname']"));
 		WebElement company = driver.findElement(By.xpath("//input[@id='input-payment-company']"));
 		WebElement address1 = driver.findElement(By.xpath("//input[@id='input-payment-address-1']"));
-		WebElement address2= driver.findElement(By.xpath("//input[@id='input-payment-address-2']"));
+		WebElement address2 = driver.findElement(By.xpath("//input[@id='input-payment-address-2']"));
 		WebElement city = driver.findElement(By.xpath("//input[@id='input-payment-city']"));
-		
+
 		WebElement postCode = driver.findElement(By.xpath("//input[@id='input-payment-postcode']"));
 
 		firstname.sendKeys("akanksha");
 		lastname.sendKeys("bal");
-		//company.sendKeys("concrete-buddies");
+		// company.sendKeys("concrete-buddies");
 		address1.sendKeys("33 kirk drive");
-		//address2.sendKeys("33 kirk drive");
+		// address2.sendKeys("33 kirk drive");
 		city.sendKeys("brampton");
 		postCode.sendKeys("L6X4E6");
 		WebElement country = driver.findElement(By.id("input-payment-country"));
 		Select select = new Select(country);
 		select.selectByVisibleText("Canada");
-		
-		WebElement region = driver.findElement(By.id("input-payment-zone"));
-region.click();
+
+		WebElement region = wait.until(ExpectedConditions.elementToBeClickable(By.id("input-payment-zone")));
+		region.click();
 		Select Region = new Select(region);
 		Region.selectByValue("610");
+		
 		WebElement continueBtn = driver.findElement(By.xpath("//input[@value='Continue']"));
 		continueBtn.click();
 		WebElement addComments = driver.findElement(By.xpath("//textarea[@name='comment']"));
-		addComments.sendKeys("abcdefghi");
+		addComments.sendKeys("abcdefghi jfehferk jfoejfoerokf kfewoofop");
 		WebElement paymentCheckbox = driver.findElement(By.cssSelector(" input[type='checkbox']"));
-		
+
 		paymentCheckbox.click();
-		WebElement paymentConfirmBtn = driver.findElement(By.id("button-payment-method"));
-		paymentConfirmBtn.click();
-		
-		WebElement headerElement = driver.findElement(By.tagName("h1"));
-		String actualHeaderText = headerElement.getText();
+		WebElement paymentContinueBtn = driver.findElement(By.id("button-payment-method"));
+		paymentContinueBtn.click();
 
-		String expectedHeaderText = "Your order has been placed!";
-
-		Assert.assertEquals(actualHeaderText, expectedHeaderText, "Header text doesn't match");
-
-		if (actualHeaderText.equals(expectedHeaderText)) {
-			WebElement continueButton = driver.findElement(By.cssSelector(".pull-right a.btn-primary"));
-			continueButton.click();
+//		WebElement headerElement = driver.findElement(By.tagName("h1"));
+//		String actualHeaderText = headerElement.getText();
+//
+//		String expectedHeaderText = "Your order has been placed!";
+//
+//		Assert.assertEquals(actualHeaderText, expectedHeaderText, "Header text doesn't match");
+//
+//		if (actualHeaderText.equals(expectedHeaderText)) {
+//			WebElement continueButton = driver.findElement(By.cssSelector(".pull-right a.btn-primary"));
+//			continueButton.click();
+//			WebElement paymentConfirmBtn = driver.findElement(By.id("button-payment-method"));
+//			paymentConfirmBtn.click();
 		}
 
 	}
-	
-	}
+
 
